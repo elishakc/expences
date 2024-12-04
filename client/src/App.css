@@ -2,26 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-:root {
-  --color-yellow: #f9c74f;
+
+:root{
+  --color-yollow : #f9c74f;
   --color-purple: #9d4edd;
 }
-* > * {
-  font-family: "poppins", sans-serif;
+
+* > *{
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
 }
+
 .App {
   text-align: center;
-  padding:4em 0;
+  padding: 4em 0;
 }
 
 .bg-yellow{
-  background-color: var(--color-yellow);
+  background-color: var(--color-yollow);
 }
- 
+
 .bg-purple{
   background-color: var(--color-purple);
+}
+
+.chart .title{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-input{
+  @apply mt-1 block w-full py-2 px-3 border border-gray-200 bg-white rounded-md focus:outline-none focus:ring-indigo-500 sm:text-sm;
 }
