@@ -9,9 +9,9 @@ export default function Labels() {
   if (isFetching) {
     Transactions = <div>Fetching</div>;
   } else if (isSuccess) {
-    Transactions = getLabels(data, "type").map((v, i) => (
-      <LabelComponent key={i} data={v}></LabelComponent>
-    ));
+    Transactions = getLabels(data, "type").map((v, i) => {
+      return <LabelComponent key={i} data={v}></LabelComponent>;
+    });
   } else if (isError) {
     Transactions = <div>Error</div>;
   }
@@ -28,6 +28,7 @@ function LabelComponent({ data }) {
           className="w-2 h-2 rounded py-3"
           style={{ background: data.color ?? "#f9c74f" }}
         ></div>
+
         <h3 className="text-md">{data.type ?? ""}</h3>
       </div>
       <h3 className="font-bold">{Math.round(data.percent) ?? 0}%</h3>

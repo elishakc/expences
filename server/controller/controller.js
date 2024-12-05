@@ -8,8 +8,8 @@ async function create_Categories(req, res) {
       color: "#FCBE44",
     });
 
-    const savedCategory = await Create.save(); // Use await to save the document
-    return res.json(savedCategory); // Respond with the saved document
+    const savedCategory = await Create.save();
+    return res.json(savedCategory);
   } catch (err) {
     return res
       .status(400)
@@ -46,8 +46,8 @@ async function create_Transaction(req, res) {
       date: new Date(),
     });
 
-    const savedTransaction = await create.save(); // Use await to save the document
-    return res.json(savedTransaction); // Respond with the saved document
+    const savedTransaction = await create.save();
+    return res.json(savedTransaction);
   } catch (err) {
     return res
       .status(400)
@@ -74,14 +74,16 @@ async function delete_Transaction(req, res) {
   }
 
   try {
-    await model.Transaction.deleteOne(req.body);
+    const { _id } = req.body;
+    if (!_id) {
+      return res.status(400).json({ message: "Transaction ID is required" });
+    }
+    await model.Transaction.deleteOne({ _id });
     return res.json("Record Deleted!");
   } catch (err) {
-    return res
-      .status(400)
-      .json({
-        message: `Error while deleting Transaction Record: ${err.message}`,
-      });
+    return res.status(400).json({
+      message: `Error while deleting Transaction Record: ${err.message}`,
+    });
   }
 }
 
@@ -98,19 +100,39 @@ async function get_Labels(req, res) {
         },
       },
       {
-        $unwind: "$categories_info",
+        $unwind: {
+          path: "$categories_info",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            transactionId: "$_id",
+            type: "$type",
+            name: "$name",
+            amount: "$amount",
+            color: "$categories_info.color",
+            date: "$date",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: "$_id.transactionId",
+          name: "$_id.name",
+          type: "$_id.type",
+          amount: "$_id.amount",
+          color: "$_id.color",
+          date: "$_id.date",
+        },
+      },
+      {
+        $sort: { date: -1 },
       },
     ]);
 
-    let data = result.map((v) => ({
-      _id: v._id,
-      name: v.name,
-      type: v.type,
-      amount: v.amount,
-      color: v.categories_info["color"],
-    }));
-
-    return res.json(data);
+    return res.json(result);
   } catch (err) {
     return res
       .status(400)

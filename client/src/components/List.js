@@ -3,9 +3,8 @@ import React from "react";
 import { default as api } from "../store/apiSlice";
 
 export default function List() {
-  const { data, isFetching, isSuccess, isError } = api.useGetLabelsQuery();
+  const { data, isFetching, isError } = api.useGetLabelsQuery();
   const [deleteTransaction] = api.useDeleteTransactionMutation();
-  let Transactions;
 
   const handlerClick = (e) => {
     if (!e.target.dataset.id) return 0;
@@ -13,19 +12,17 @@ export default function List() {
   };
 
   if (isFetching) {
-    Transactions = <div>Fetching</div>;
-  } else if (isSuccess) {
-    Transactions = data.map((v, i) => (
-      <Transaction key={i} category={v} handler={handlerClick}></Transaction>
-    ));
+    return <div>Fetching</div>;
   } else if (isError) {
-    Transactions = <div>Error</div>;
+    return <div>Error</div>;
   }
 
   return (
     <div className="flex flex-col py-6 gap-3">
       <h1 className="py-4 font-bold text-xl">History</h1>
-      {Transactions}
+      {data?.map((v, i) => (
+        <Transaction key={i} category={v} handler={handlerClick}></Transaction>
+      ))}
     </div>
   );
 }
